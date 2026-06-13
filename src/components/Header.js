@@ -27,6 +27,7 @@ export default function Header() {
           <img alt="Frank Rolland Logo" className="nav-logo-img" src="/logo.png" />
         </Link>
         <ul className="nav-links">
+          <li><Link href="/">Home</Link></li>
           <li><Link href="/properties">Properties</Link></li>
           <li><Link href="/invest">Invest</Link></li>
           <li><Link href="/brokerage">Brokerage</Link></li>
@@ -46,6 +47,7 @@ export default function Header() {
 
       {/* Mobile Navigation Drawer */}
       <div className={`mobile-nav ${mobileMenuOpen ? 'active' : ''}`}>
+        <Link href="/" onClick={toggleMobileMenu}>Home</Link>
         <Link href="/properties" onClick={toggleMobileMenu}>Properties</Link>
         <Link href="/invest" onClick={toggleMobileMenu}>Invest</Link>
         <Link href="/brokerage" onClick={toggleMobileMenu}>Brokerage</Link>
