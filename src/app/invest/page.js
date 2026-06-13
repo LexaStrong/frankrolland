@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import ActionModal from '@/components/ActionModal';
 
 const API_BASE = '/api/v1';
 
@@ -23,6 +24,7 @@ export default function InvestPage() {
   const [funds, setFunds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openFaq, setOpenFaq] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     fetch(`${API_BASE}/funds`)
@@ -49,7 +51,7 @@ export default function InvestPage() {
           <p>Access exclusive, SEC-compliant private real estate funds targeting high-yield opportunities across Ghana.</p>
           <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
             <a href="#funds" className="btn btn-primary btn-lg">View Open Funds</a>
-            <button className="btn btn-outline btn-lg" style={{ borderColor: 'rgba(255,255,255,0.3)', color: '#fff' }}>Register for KYC</button>
+            <button className="btn btn-outline btn-lg" style={{ borderColor: 'rgba(255,255,255,0.3)', color: '#fff' }} onClick={() => setModalOpen(true)}>Register for KYC</button>
           </div>
         </div>
       </section>
@@ -168,6 +170,8 @@ export default function InvestPage() {
           </p>
         </div>
       </section>
+
+      <ActionModal isOpen={modalOpen} onClose={() => setModalOpen(false)} title="Register for KYC" description="To comply with SEC regulations, please chat with our team on WhatsApp or send us an email to begin your KYC verification." />
     </>
   );
 }

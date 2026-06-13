@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import ActionModal from '@/components/ActionModal';
 
 const API_BASE = '/api/v1';
 
@@ -10,6 +11,7 @@ export default function FundDetailPage() {
   const params = useParams();
   const [fund, setFund] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     fetch(`${API_BASE}/funds/${params.slug}`)
@@ -96,7 +98,7 @@ export default function FundDetailPage() {
               <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--brand-gold)', marginBottom: '2rem' }}>{fmt(fund.minimum_investment)}</div>
               {isOpen ? (
                 <>
-                  <button className="btn btn-primary" style={{ width: '100%', marginBottom: '1rem' }}>Start Investment</button>
+                  <button className="btn btn-primary" style={{ width: '100%', marginBottom: '1rem' }} onClick={() => setModalOpen(true)}>Start Investment</button>
                   <button className="btn btn-outline" style={{ width: '100%' }}>Download Prospectus</button>
                 </>
               ) : (
@@ -122,6 +124,13 @@ export default function FundDetailPage() {
           </div>
         </div>
       </div>
+
+      <ActionModal 
+        isOpen={modalOpen} 
+        onClose={() => setModalOpen(false)} 
+        title="Start Your Investment" 
+        description="To begin the investment process, please contact our wealth management team to receive the SEC-approved prospectus and wiring instructions." 
+      />
     </>
   );
 }

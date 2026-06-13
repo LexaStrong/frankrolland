@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import ActionModal from '@/components/ActionModal';
 
 const API_BASE = '/api/v1';
 
@@ -16,6 +17,8 @@ export default function BuildPage() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState('all');
+  const [enquireModalOpen, setEnquireModalOpen] = useState(false);
+  const [proposalModalOpen, setProposalModalOpen] = useState(false);
 
   useEffect(() => {
     fetch(`${API_BASE}/projects`)
@@ -29,7 +32,7 @@ export default function BuildPage() {
   return (
     <>
       {/* ─── HERO ─── */}
-      <section className="hero" style={{ background: 'var(--brand-teal)', textAlign: 'center', minHeight: 'auto', padding: '10rem 0 5rem' }}>
+      <section className="hero" style={{ textAlign: 'center', minHeight: 'auto', padding: '10rem 0 5rem' }}>
         <div className="hero-bg" style={{ backgroundImage: "url('/construction.png')", opacity: 0.4 }}></div>
         <div className="container hero-content" style={{ maxWidth: 800, margin: '0 auto', position: 'relative', zIndex: 2 }}>
           <h1>Shaping the <span>Skyline.</span></h1>
@@ -124,18 +127,18 @@ export default function BuildPage() {
           <div className="service-card">
             <h3>Bespoke Build Services</h3>
             <p>Have land? Want to build your dream home or a commercial plaza to international standards? Our team handles everything from architectural design and permitting to construction and final handover.</p>
-            <button className="btn btn-primary">Enquire Now</button>
+            <button className="btn btn-primary" onClick={() => setEnquireModalOpen(true)}>Enquire Now</button>
           </div>
           <div id="jv" className="service-card">
             <h3>Land Joint Ventures</h3>
             <p>We partner with landowners in prime locations across Ghana. Turn your dormant land into a high-yielding, premium real estate asset through our equity or profit-sharing JV models.</p>
-            <button className="btn btn-primary">Submit Land Proposal</button>
+            <button className="btn btn-primary" onClick={() => setProposalModalOpen(true)}>Submit Land Proposal</button>
           </div>
         </div>
       </section>
 
       {/* ─── GALLERY (NEW) ─── */}
-      <section className="section-spacing container">
+      <section className="section-spacing container hide-on-mobile">
         <div className="section-header">
           <h2>Project Gallery</h2>
           <p>A glimpse into the quality and craftsmanship of Frank Rolland developments.</p>
@@ -151,6 +154,20 @@ export default function BuildPage() {
           ))}
         </div>
       </section>
+
+      <ActionModal 
+        isOpen={enquireModalOpen} 
+        onClose={() => setEnquireModalOpen(false)} 
+        title="Enquire About Build Services" 
+        description="Our development team is ready to discuss your custom build project. Contact us via WhatsApp or Email." 
+      />
+
+      <ActionModal 
+        isOpen={proposalModalOpen} 
+        onClose={() => setProposalModalOpen(false)} 
+        title="Submit Land Proposal" 
+        description="Have prime land for a Joint Venture? Send us the details and title documents via email or chat with our acquisitions team on WhatsApp." 
+      />
     </>
   );
 }

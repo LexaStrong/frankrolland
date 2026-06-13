@@ -62,38 +62,29 @@ export default function PropertiesPage() {
   return (
     <>
       {/* ─── SEARCH ─── */}
-      <section className="search-section" style={{ position: 'relative', overflow: 'hidden', padding: '6rem 0' }}>
+      <section className="search-section" style={{ position: 'relative', overflow: 'hidden', padding: '6rem 0 2rem' }}>
         <div className="hero-bg" style={{ backgroundImage: "url('/villa.png')", opacity: 0.15 }}></div>
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
             <div>
-              <h1 className="search-title">Find Your Perfect Property</h1>
-              <p className="search-subtitle">Discover premium, title-verified real estate across Ghana.</p>
+              <span className="section-subtitle" style={{ marginBottom: '1rem' }}>FEATURED PROPERTIES</span>
+              <h1 className="search-title" style={{ textTransform: 'uppercase', fontWeight: 900, lineHeight: 1.1, fontSize: 'clamp(2.5rem, 8vw, 4rem)', marginBottom: '2rem' }}>
+                SPACES CRAFTED<br/>WITH PURPOSE
+              </h1>
             </div>
-            <button className="currency-toggle" onClick={toggleCurrency} style={{ marginTop: '0.5rem' }}>
-              {currency} ⇄ {currency === 'USD' ? 'GHS' : 'USD'}
-            </button>
           </div>
-          <div className="filter-bar">
-            <select className="filter-select" value={typeFilter} onChange={e => setTypeFilter(e.target.value)}>
-              <option value="all">All Types</option>
-              <option value="for_sale">For Sale</option>
-              <option value="for_rent">For Rent</option>
-              <option value="off_plan">Off-Plan</option>
+          
+          <div className="pill-filters" style={{ display: 'flex', gap: '0.5rem', background: 'var(--bg-secondary)', padding: '0.5rem', borderRadius: 'var(--radius-full)', overflowX: 'auto', scrollbarWidth: 'none', marginBottom: '1.5rem' }}>
+            <button className={`pill-btn ${categoryFilter === 'all' ? 'active' : ''}`} onClick={() => setCategoryFilter('all')}>ALL</button>
+            <button className={`pill-btn ${categoryFilter === 'residential' ? 'active' : ''}`} onClick={() => setCategoryFilter('residential')}>RESIDENTIAL</button>
+            <button className={`pill-btn ${categoryFilter === 'commercial' ? 'active' : ''}`} onClick={() => setCategoryFilter('commercial')}>COMMERCIAL</button>
+            
+            <select className="pill-btn" value={typeFilter} onChange={e => setTypeFilter(e.target.value)} style={{ appearance: 'none', border: 'none', outline: 'none' }}>
+              <option value="all">ANY TYPE</option>
+              <option value="for_sale">FOR SALE</option>
+              <option value="for_rent">FOR RENT</option>
+              <option value="off_plan">OFF-PLAN</option>
             </select>
-            <select className="filter-select" value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)}>
-              <option value="all">Any Category</option>
-              <option value="residential">Residential</option>
-              <option value="commercial">Commercial</option>
-            </select>
-            <input
-              type="text"
-              className="filter-input"
-              placeholder="Search by location..."
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-            />
-            <button className="btn-search">Search Listings</button>
           </div>
         </div>
       </section>
@@ -108,41 +99,30 @@ export default function PropertiesPage() {
           {loading ? (
             <div className="loading-spinner">Loading properties...</div>
           ) : (
-            <div className="property-grid">
+            <div className="properties-page-grid">
               {filtered.map(prop => (
                 <Link key={prop.id} href={`/properties/${prop.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <div className="property-card">
-                    <div className="property-image-wrapper">
-                      <img src={prop.media.thumbnail} alt={prop.title} className="property-image" />
-                      <div className="status-badge">{prop.status.replace('_', ' ')}</div>
-                      {prop.title_info.verified && (
-                        <div className="verified-badge">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                          Title Verified
-                        </div>
-                      )}
+                  <div className="properties-page-card">
+                    <div className="properties-page-image-wrapper">
+                      <img src={prop.media.thumbnail} alt={prop.title} className="properties-page-image" />
+                      <div className="properties-page-badge">{prop.status.replace('_', ' ')}</div>
                     </div>
-                    <div className="property-content">
-                      <div className="property-price">{formatPrice(prop)}</div>
-                      <h3 className="property-title">{prop.title}</h3>
-                      <div className="property-location">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <div className="properties-page-content">
+                      <div className="properties-page-category">
+                        {prop.location.neighbourhood.toUpperCase()}
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                      </div>
+                      <h3 className="properties-page-title">{prop.title}</h3>
+                      <div className="properties-page-location">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                         {prop.location.neighbourhood}, {prop.location.city}
                       </div>
-                      <div className="property-specs">
-                        <div className="spec-item">
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                          {prop.specs.bedrooms} Beds
-                        </div>
-                        <div className="spec-item">
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 12h20"></path><path d="M20 12v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8"></path></svg>
-                          {prop.specs.bathrooms} Baths
-                        </div>
-                        <div className="spec-item">
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
-                          {prop.specs.sqm} sqm
-                        </div>
+                      <div className="properties-page-specs">
+                        <span>{prop.specs.bedrooms} Bed</span>
+                        <span>{prop.specs.bathrooms} Bath</span>
+                        <span>{prop.specs.sqm} sqm</span>
                       </div>
+                      <div className="properties-page-price">{formatPrice(prop)}</div>
                     </div>
                   </div>
                 </Link>
@@ -153,7 +133,7 @@ export default function PropertiesPage() {
       </section>
 
       {/* ─── MORTGAGE CALCULATOR (NEW) ─── */}
-      <section className="section-spacing" style={{ background: 'var(--bg-secondary)', borderTop: '1px solid var(--border-glass)' }}>
+      <section className="section-spacing hide-on-mobile" style={{ background: 'var(--bg-secondary)', borderTop: '1px solid var(--border-glass)' }}>
         <div className="container" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
           <div>
             <h2>Mortgage Calculator</h2>

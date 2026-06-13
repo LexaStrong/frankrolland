@@ -1,47 +1,57 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 export default function Header() {
   const pathname = usePathname();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const links = [
-    { href: '/', label: 'Home' },
-    { href: '/properties', label: 'Properties' },
-    { href: '/invest', label: 'Invest' },
-    { href: '/brokerage', label: 'Brokerage' },
-    { href: '/build', label: 'Build' },
-  ];
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 60);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-  const isActive = (href) => {
-    if (href === '/') return pathname === '/';
-    return pathname.startsWith(href);
-  };
+  const isLightPage = pathname !== '/';
+  const navbarClass = `navbar ${isLightPage || isScrolled ? 'scrolled' : 'transparent'} ${isLightPage ? 'light' : ''}`;
+
+  const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
 
   return (
-    <header className="header">
-      <div className="container nav">
-        <Link href="/">
-          <img src="/logo.png" alt="Frank Rolland" className="logo-img" style={{ height: 44, width: 'auto', borderRadius: 4 }} />
+    <>
+      <nav className={navbarClass}>
+        <Link href="/" className="nav-logo">
+          <img alt="Frank Rolland Logo" className="nav-logo-img" src="/logo.png" />
         </Link>
-        <nav className="nav-links">
-          {links.map(link => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={isActive(link.href) ? 'active' : ''}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-        <button className="mobile-toggle" aria-label="Menu">
+        <ul className="nav-links">
+          <li><Link href="/properties">Properties</Link></li>
+          <li><Link href="/invest">Invest</Link></li>
+          <li><Link href="/brokerage">Brokerage</Link></li>
+          <li><Link href="/build">Build</Link></li>
+          <li><Link className="nav-cta" href="/#contact">Contact</Link></li>
+        </ul>
+        <button 
+          className={`hamburger ${mobileMenuOpen ? 'active' : ''}`} 
+          aria-label="Menu"
+          onClick={toggleMobileMenu}
+        >
           <span></span>
           <span></span>
           <span></span>
         </button>
+      </nav>
+
+      {/* Mobile Navigation Drawer */}
+      <div className={`mobile-nav ${mobileMenuOpen ? 'active' : ''}`}>
+        <Link href="/properties" onClick={toggleMobileMenu}>Properties</Link>
+        <Link href="/invest" onClick={toggleMobileMenu}>Invest</Link>
+        <Link href="/brokerage" onClick={toggleMobileMenu}>Brokerage</Link>
+        <Link href="/build" onClick={toggleMobileMenu}>Build</Link>
+        <Link href="/#contact" onClick={toggleMobileMenu}>Contact</Link>
       </div>
-    </header>
+    </>
   );
 }
